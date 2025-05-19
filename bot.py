@@ -8,9 +8,12 @@ from telegram.ext import (
     ChatMemberHandler,
     ContextTypes,
 )
+from dotenv import load_dotenv
+import os
 
-# Токен бота, полученный от BotFather
-TOKEN = "ВАШ_ТОКЕН_БОТА"
+load_dotenv()  # Загружает переменные из .env
+
+TOKEN = os.getenv("BOT_TOKEN")
 
 
 # Обработчик события добавления бота в канал
@@ -82,8 +85,10 @@ if __name__ == "__main__":
         CallbackQueryHandler(handle_button_click)
     )  # Обработка нажатия кнопки
     app.add_handler(
-        MessageHandler(filters.PRIVATE & ~filters.COMMAND, process_private_message)
-    )  # Приватные сообщения
+        MessageHandler(
+            filters.ChatType.PRIVATE & ~filters.COMMAND, process_private_message
+        )
+    )
 
     # Начинаем приём сообщений
     app.run_polling()
